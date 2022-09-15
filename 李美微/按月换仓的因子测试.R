@@ -1,0 +1,70 @@
+#尝试构建因子
+library(tidyverse)
+library(openxlsx)
+library(ggplot2)
+library(tidyr)
+library(reshape2)
+library(RColorBrewer)
+setwd("F://913")
+list_name=c("18.1.xlsx","18.2月.xlsx","18.3月.xlsx",
+              "18.4.xlsx","18.5月.xlsx","18.6月.xlsx",
+              "18.7.xlsx","18.8月.xlsx","18.9月.xlsx",
+              "18.10.xlsx","18.11月.xlsx","18.12月.xlsx",
+            "19.1.xlsx","19.2月.xlsx","19.3月.xlsx",
+            "19.4.xlsx","19.5月.xlsx","19.6月.xlsx",
+            "19.7.xlsx","19.8月.xlsx","19.9月.xlsx",
+            "19.10.xlsx","19.11月.xlsx","19.12月.xlsx",
+            "20.1.xlsx","20.2月.xlsx","20.3月.xlsx",
+            "20.4.xlsx","20.5月.xlsx","20.66月.xlsx",
+            "20.7.xlsx","20.8月.xlsx","20.9月.xlsx",
+            "20.10.xlsx","20.11月.xlsx","20.12月.xlsx",
+            "21.1.xlsx","21.2月.xlsx","21.3月.xlsx",
+            "21.4.xlsx","21.5月.xlsx","21.6月.xlsx",
+            "21.7.xlsx","21.8月.xlsx","21.9月.xlsx",
+            "21.10.xlsx","21.11月.xlsx","21.12月.xlsx",
+            "22.1.xlsx","22.2月.xlsx","22.3月.xlsx",
+            "22.4.xlsx","22.5月.xlsx","22.6月.xlsx",
+            "22.7.xlsx","22.8月.xlsx")
+factor1=array(0,dim=c(5,57,17))#48个月+9
+factor1[,1,]=1#每个因子的每种组合的第一列都是1代表相同的基金初始值
+for(k in 1:56){#56张表格分别读取）
+  #应该在18个表格里面加上17个因子的循环
+  data=read.xlsx(paste("F://913//",list_name[k],sep=""),sheet=1,cols=3:21)#17个指标加2个净值
+  print(head(data))
+  data=as.matrix(data)
+  nr=nrow(data)
+  data_rate=data[,19]/data[,18]
+  data1=cbind(data,data_rate)
+  #还差一个连乘应该是先连乘再平均,把连乘乘开其实就是最简单的相除
+  for(f in 1:17){
+    data_order=data1[order(data1[,f],decreasing=T),] 
+    factor1[1,k+1,f]=mean(data_order[1:5,20])*factor1[1,k,f]
+    factor1[2,k+1,f]=mean(data_order[1:30,20])*factor1[2,k,f]
+    factor1[3,k+1,f]=mean(data_order[,20])*factor1[3,k,f]
+    factor1[4,k+1,f]=mean(data_order[nr-29:nr,20])*factor1[4,k,f]
+    factor1[5,k+1,f]=mean(data_order[nr-4:nr,20])*factor1[5,k,f]
+  }
+}
+head(data)
+#接下来应该画出17个因子的图
+list_factors=c("选股alpha","最大回撤","基金份额","机构持仓比例","管理人员持仓比例",
+               "最大回撤（1m）","最大回撤（3m）","最大回撤（12m）",
+               "波动率（1m）","波动率（3m）","波动率（12m）",
+               "收益率（1m）","收益率（3m）","收益率（12m）",
+               "夏普比率（1m）","夏普比率（3m）","夏普比率（12m）")
+x=seq(1,57,1)
+for(p in 1:17){
+  data=data.frame(x,factor1[1,,p],factor1[2,,p],factor1[3,,p],factor1[4,,p],factor1[5,,p])
+  colnames(data)<-c('date','top 5','top 30','all','bottom 30','bottom 5')
+  temp=melt(data,id='date')
+  ggplot(data=temp,aes(x=date,y=value,color=variable))+geom_line()+ggtitle(list_factors[p])
+  ggsave(file=paste(list_factors[p],".png",sep=""),width=8, height=4)
+  print(p)
+  print(list_factors[p])
+}
+factor1[,,9]
+dim(data_plus)
+variable
+#factor1的行是不同组别的基金，列是时间净值，不同层是不同的因子
+factor1[,,4:5]
+factor1[,,4]
