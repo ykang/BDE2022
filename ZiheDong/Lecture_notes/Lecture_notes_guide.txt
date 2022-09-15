@@ -1,0 +1,17 @@
+L0: Course Introduction (slides)
+L1: Introduction to Big Data (slides)
+L2: Using Linux as a Data Scientist (slides)
+L3: Using Git for Version Control
+L4: Statistical Modeling with Python (slides)
+L5: Web Scraping with Python
+L5.1 Basic Web Scraping with Python (slides)
+L5.1 Web Scraping with selenium
+L6: Introduction to Parallel Computing (slides)
+L7: Exploring the World of Hadoop (slides)
+L8: Hadoop Streaming (slides)
+L9: Hive (slides)
+L10: Introduction to Spark (slides)
+L11: Data Processing with Spark (slides)
+L12: Machine Learning with Spark (slides)
+L13: Text processing with Spark (slides)
+L14: Guest lecture on advanced topics
